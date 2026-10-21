@@ -31,9 +31,13 @@ function descontarStock(int &$stock, int $cantidad): void {
 }
 
 function promedioPrecios(float ...$precios): float {
+    if (count($precios) === 0) {
+        throw new InvalidArgumentException('Debe proporcionar al menos un precio.');
+    }
+
     $total = array_sum($precios);
     $cantidad = count($precios);
-    return $cantidad > 0 ? round($total / $cantidad, 2) : 0.0;
+    return round($total / $cantidad, 2);
 }
 $stockCuadernos = 10;
 descontarStock($stockCuadernos, 3);
@@ -47,6 +51,12 @@ echo formatearPrecio(totalCarrito(15000, 22000, 8000)) . "\n";
 echo "Quedan $stockCuadernos cuadernos\n";
 
 echo "Promedio de precios: " . formatearPrecio(promedioPrecios(15000, 22000, 14500, 24000, 8000)) . "\n"; // Promedio de precios
+
+try {
+    promedioPrecios();
+} catch (InvalidArgumentException $e) {
+    echo "Error al calcular el promedio: " . $e->getMessage() . "\n";
+}
 
 $productos = [
     ['nombre' => 'Cuaderno', 'precio' => 8000,  'stock' => 20],
