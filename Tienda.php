@@ -54,12 +54,21 @@ $productos = [
     ['nombre' => 'Mochila',  'precio' => 95000, 'stock' => 4],
 ];
 
-$nombres = array_column($productos, 'nombre');
+$nombres = array_map(
+    static fn(string $nombre): string => strtr(strtoupper($nombre), [
+    ]),
+    array_column($productos, 'nombre')
+);
 echo "Catálogo: " . implode(', ', $nombres) . "\n";
 echo "Total de productos: " . count($productos) . "\n";
 
 $disponibles = array_filter($productos, fn($p) => $p['stock'] > 0);
 echo "Con stock: " . count($disponibles) . "\n";
 
-$precios = array_column($productos, 'precio');
-echo "El más caro cuesta " . formatearPrecio(max($precios)) . "\n";
+$preciosConIVA = array_map(
+    fn(array $producto): float => calcularIVA($producto['precio']),
+    $productos
+);
+
+echo "Precios con IVA: " . implode(', ', array_map('formatearPrecio', $preciosConIVA)) . "\n";
+echo "El más caro cuesta " . formatearPrecio(max($preciosConIVA)) . "\n";
