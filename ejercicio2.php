@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 function sumarFuncion(int $a, int $b): void
 {
     echo "La suma de $a y $b es: " . ($a + $b) . "\n";
